@@ -13,9 +13,9 @@ const app: Koa = new Koa();
 
 app
   .use(logger('tiny'))
+  .use(cors())
   .use(router.routes())
   .use(router.allowedMethods())
-  .use(cors())
   .use(bodyParser())
   .use(async (ctx: Koa.Context) => {
     ctx.body = 'Hello world';

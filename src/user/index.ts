@@ -12,11 +12,11 @@ export const isAuthorized = async (req: Koa.Request) => {
   }
 
   // Mock validation
-  const providedUser = value.username;
+  const providedEmail = value.email;
   const providedPassword = value.password;
   //const correctPassword = await redis.getAsync(value.username);
-  const correctUser = 'admin';
+  const correctEmail = 'admin333@gmail.com';
   const correctPassword = 'adminadmin';
 
-  return providedPassword == correctPassword && providedUser == correctUser;
+  return providedPassword == correctPassword && providedEmail == correctEmail;
 };

@@ -1,10 +1,10 @@
 import Joi from 'joi';
 
 export const schema = Joi.object().keys({
-  username: Joi.string()
-    .min(3)
-    .max(24)
-    .alphanum()
+  email: Joi.string()
+    .min(5)
+    .max(32)
+    .email({minDomainSegments: 2, tlds: {allow: ['com', 'net', 'ru']}})
     .required(),
 
   password: Joi.string()
