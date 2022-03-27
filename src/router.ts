@@ -1,3 +1,4 @@
+import * as Koa from 'koa';
 import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import * as User from './user';
@@ -5,7 +6,7 @@ import {generateTokens} from './token';
 
 const router = new Router();
 
-router.post('/', bodyParser(), async ctx => {
+router.post('/', bodyParser(), async (ctx: Koa.Context) => {
   console.log('ctx', ctx, ctx.request.body);
   const isAuthorized = await User.isAuthorized(ctx.request.body);
 
@@ -18,6 +19,7 @@ router.post('/', bodyParser(), async ctx => {
     ctx.body = tokens;
   } else {
     ctx.status = 401;
+    ctx.body = {err: {message: 'Error: from server (401)'}};
   }
 });
 

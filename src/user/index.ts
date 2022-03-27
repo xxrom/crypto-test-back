@@ -15,7 +15,7 @@ export const isAuthorized = async (req: Koa.Request) => {
   const providedEmail = value.email;
   const providedPassword = value.password;
   //const correctPassword = await redis.getAsync(value.username);
-  const correctEmail = 'admin333@gmail.com';
+  const correctEmail = 'admin@gmail.com';
   const correctPassword = 'adminadmin';
 
   return providedPassword == correctPassword && providedEmail == correctEmail;
