@@ -1,9 +1,12 @@
 First start: `yarn && yarn start`
-build: `yarn build`
-start: `yarn start`
-dev: `yarn watch`
 
-server: 'localhost:4444'
+Build: `yarn build`
+
+Start: `yarn start`
+
+Dev: `yarn watch`
+
+server: `localhost:4444`
 
 Test local server validation via curl:
 
