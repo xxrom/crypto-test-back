@@ -4,10 +4,11 @@ Build: `yarn build`
 
 Start: `yarn start`
 
-Dev: `yarn watch`
+Dev: `yarn dev`
 
 server: `localhost:4444`
 
+---
 Test local server validation via curl:
 
 ```
