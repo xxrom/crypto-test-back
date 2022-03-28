@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.schema = void 0;
 const joi_1 = __importDefault(require("joi"));
 exports.schema = joi_1.default.object().keys({
-    username: joi_1.default.string()
-        .min(3)
-        .max(24)
-        .alphanum()
+    email: joi_1.default.string()
+        .min(5)
+        .max(32)
+        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ru'] } })
         .required(),
     password: joi_1.default.string()
         .min(8)

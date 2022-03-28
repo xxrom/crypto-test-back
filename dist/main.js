@@ -14,9 +14,9 @@ const port = process.env.PORT || '4444';
 const app = new koa_1.default();
 app
     .use((0, koa_morgan_1.default)('tiny'))
+    .use((0, cors_1.default)())
     .use(router_1.default.routes())
     .use(router_1.default.allowedMethods())
-    .use((0, cors_1.default)())
     .use((0, koa_bodyparser_1.default)())
     .use(async (ctx) => {
     ctx.body = 'Hello world';

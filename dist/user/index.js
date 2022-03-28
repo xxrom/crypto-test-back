@@ -10,12 +10,12 @@ const isAuthorized = async (req) => {
         return false;
     }
     // Mock validation
-    const providedUser = value.username;
+    const providedEmail = value.email;
     const providedPassword = value.password;
     //const correctPassword = await redis.getAsync(value.username);
-    const correctUser = 'admin';
+    const correctEmail = 'admin@gmail.com';
     const correctPassword = 'adminadmin';
-    return providedPassword == correctPassword && providedUser == correctUser;
+    return providedPassword == correctPassword && providedEmail == correctEmail;
 };
 exports.isAuthorized = isAuthorized;
 //# sourceMappingURL=index.js.map

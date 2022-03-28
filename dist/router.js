@@ -42,6 +42,7 @@ router.post('/', (0, koa_bodyparser_1.default)(), async (ctx) => {
     }
     else {
         ctx.status = 401;
+        ctx.body = { err: { message: 'Error: from server (401)' } };
     }
 });
 exports.default = router;
