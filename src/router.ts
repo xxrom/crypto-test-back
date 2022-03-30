@@ -8,13 +8,13 @@ import {ax} from './main';
 const router = new Router();
 
 router.post('/', bodyParser(), async (ctx: Koa.Context) => {
-  console.log('ctx', ctx, ctx.request.body);
+  //console.log('ctx', ctx, ctx.request.body);
   const isAuthorized = await User.isAuthorized(ctx.request.body);
 
   if (isAuthorized) {
     const tokens = await generateTokens('user');
 
-    console.log('tokens', tokens);
+    //console.log('tokens', tokens);
 
     ctx.status = 200;
     ctx.body = tokens;
