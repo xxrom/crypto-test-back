@@ -11,7 +11,6 @@ env.config();
 const port = process.env.PORT || '4444';
 
 // axios Start ------------------------
-
 export const axiosMy: any = axios.create({
   timeout: 1000,
   baseURL: 'https://api.nomics.com/v1',

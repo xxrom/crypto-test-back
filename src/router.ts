@@ -66,4 +66,22 @@ router.get('/currencies/ticket', async ctx => {
   ctx.body = JSON.stringify(res?.data);
 });
 
+router.get('/currencies/convert/:from/:to', async ctx => {
+  const {from, to} = ctx?.params;
+
+  const res = await ax({
+    url: `/currencies/ticker?ids=${from},${to}`,
+  });
+
+  const [fromItem] = res?.data.filter(({id}: any) => id === from);
+  const [toItem] = res?.data.filter(({id}: any) => id === to);
+
+  console.log('from', fromItem.id);
+  console.log('to', toItem.id);
+
+  const convert = toItem?.price / fromItem?.price;
+
+  ctx.body = JSON.stringify(convert);
+});
+
 export default router;
