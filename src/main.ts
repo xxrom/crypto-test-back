@@ -3,55 +3,63 @@ import logger from 'koa-morgan';
 import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
 import env from 'dotenv';
-import router from './router';
+import {currenciesRouter} from './router';
 import axios from 'axios';
+import mongoose from 'mongoose';
 
 env.config();
 
 const port = process.env.PORT || '4444';
 
-// axios Start ------------------------
-export const axiosMy: any = axios.create({
-  timeout: 1000,
-  baseURL: 'https://api.nomics.com/v1',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  params: {
-    key: process.env.API_KEY_NOMICS,
-  },
+const app: Koa = new Koa();
+
+const {Schema} = mongoose;
+
+const blogSchema = new Schema({
+  email: String,
+  password: String,
 });
 
-const memoObj: {[key: string]: any} = {};
+const mongodbIP = 'mongodb://192.168.3.13:27017';
 
-export type axProps = {
-  url: string;
-  method?: 'get' | 'post';
-};
-export const ax = async ({url, method = 'get'}: axProps) => {
-  if (!memoObj[url]) {
-    console.info('Save to memo', url);
+const getMongoDB = async () => {
+  const connection = await mongoose.createConnection(mongodbIP).asPromise();
 
-    const res = await axiosMy[method](url);
-    memoObj[url] = res;
+  console.log(`DB readyState ${connection.readyState}`);
+
+  if (connection.readyState !== 1) {
+    throw Error(`Not connectToDb, readyState ${connection.readyState}`);
   }
 
-  return memoObj[url];
+  return connection;
 };
 
-// axios end -------------------------
+const connectToDB = async (): Promise<mongoose.Connection> => {
+  console.log('Connect to Mongo');
 
-const app: Koa = new Koa();
+  try {
+    const connection = await getMongoDB();
+    return connection;
+  } catch (error) {
+    console.error('Error: ConnectDB', error.message);
+    return error;
+  }
+};
+
+export let db: mongoose.Connection;
+connectToDB().then(res => {
+  db = res;
+});
 
 app
   .use(logger('tiny'))
   .use(cors())
-  .use(router.routes())
-  .use(router.allowedMethods())
+  .use(currenciesRouter.routes())
+  .use(currenciesRouter.allowedMethods())
   .use(bodyParser())
   .use(async (ctx: Koa.Context) => {
     ctx.body = 'Hello world';
   })
   .listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`>>> 🌍 >>> Server running on port >>> ${port}`);
   });

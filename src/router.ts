@@ -3,11 +3,16 @@ import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import * as User from './user';
 import {generateTokens} from './token';
-import {ax} from './main';
+import {ax} from './ax';
+import {db} from './main';
 
-const router = new Router();
+export const currenciesRouter = new Router();
 
-router.post('/', bodyParser(), async (ctx: Koa.Context) => {
+currenciesRouter.get('/', async ctx => {
+  ctx.body = `${db?.readyState || 'null'} - readyState for mongo`;
+});
+
+currenciesRouter.post('/auth', bodyParser(), async (ctx: Koa.Context) => {
   //console.log('ctx', ctx, ctx.request.body);
   const isAuthorized = await User.isAuthorized(ctx.request.body);
 
@@ -24,49 +29,14 @@ router.post('/', bodyParser(), async (ctx: Koa.Context) => {
   }
 });
 
-/*
-var https = require("https");
-
-var options = {
-  "method": "GET",
-  "hostname": "rest.cryptoapis.io",
-  "path": "/v2/wallet-as-a-service/wallets/all-assets",
-  "qs": {"context":"yourExampleString","limit":50,"offset":0},
-  "headers": {
-    "Content-Type": "application/json",
-    "X-API-Key": "my-api-key"
-  }
-};
-
-const apiCall = (passOptions) => { 
-  const req = https.request(passOptions, (res: any) => {
-
-    const chunks: Array<Uint8Array> = [];
-
-    res.on("data", function (chunk: any) {
-      chunks.push(chunk);
-    });
-
-    res.on("end", () => {
-      var body = Buffer.concat(chunks);
-      console.log(body.toString());
-    });
-  });
-
-  return req.end 
-}
-
-req.end();
-*/
-
-router.get('/currencies/ticket', async ctx => {
+currenciesRouter.get('/currencies/ticket', async ctx => {
   const res = await ax({url: '/currencies/ticker'});
 
   //console.log('res', res, JSON.stringify(res?.data));
   ctx.body = JSON.stringify(res?.data);
 });
 
-router.get('/currencies/convert/:from/:to', async ctx => {
+currenciesRouter.get('/currencies/convert/:from/:to', async ctx => {
   const {from, to} = ctx?.params;
 
   const res = await ax({
@@ -76,12 +46,10 @@ router.get('/currencies/convert/:from/:to', async ctx => {
   const [fromItem] = res?.data.filter(({id}: any) => id === from);
   const [toItem] = res?.data.filter(({id}: any) => id === to);
 
-  console.log('from', fromItem.id);
-  console.log('to', toItem.id);
+  //console.log('from', fromItem.id);
+  //console.log('to', toItem.id);
 
   const convert = toItem?.price / fromItem?.price;
 
   ctx.body = JSON.stringify(convert);
 });
-
-export default router;
