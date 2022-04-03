@@ -1,13 +1,12 @@
+import env from 'dotenv';
+env.config();
+
 import Koa from 'koa';
 import logger from 'koa-morgan';
 import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
-import env from 'dotenv';
-import {currenciesRouter} from './router';
-import axios from 'axios';
+import {currenciesRouter, userRouter} from './routers';
 import mongoose from 'mongoose';
-
-env.config();
 
 const port = process.env.PORT || '4444';
 
@@ -15,12 +14,12 @@ const app: Koa = new Koa();
 
 const {Schema} = mongoose;
 
-const blogSchema = new Schema({
+const userSchema = new Schema({
   email: String,
   password: String,
 });
 
-const mongodbIP = 'mongodb://192.168.3.13:27017';
+const mongodbIP = 'mongodb://192.168.3.13:27017/test_0';
 
 const getMongoDB = async () => {
   const connection = await mongoose.createConnection(mongodbIP).asPromise();
@@ -50,12 +49,15 @@ export let db: mongoose.Connection;
 connectToDB().then(res => {
   db = res;
 });
+// db end----
 
 app
   .use(logger('tiny'))
   .use(cors())
   .use(currenciesRouter.routes())
+  .use(userRouter.routes())
   .use(currenciesRouter.allowedMethods())
+  .use(userRouter.allowedMethods())
   .use(bodyParser())
   .use(async (ctx: Koa.Context) => {
     ctx.body = 'Hello world';
