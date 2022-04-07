@@ -12,44 +12,21 @@ const port = process.env.PORT || '4444';
 
 const app: Koa = new Koa();
 
-const {Schema} = mongoose;
+// db ***
+export const mongodbIP = 'mongodb://192.168.3.13:27017/test_0';
 
-const userSchema = new Schema({
-  email: String,
-  password: String,
-});
-
-const mongodbIP = 'mongodb://192.168.3.13:27017/test_0';
-
-const getMongoDB = async () => {
-  const connection = await mongoose.createConnection(mongodbIP).asPromise();
-
-  console.log(`DB readyState ${connection.readyState}`);
-
-  if (connection.readyState !== 1) {
-    throw Error(`Not connectToDb, readyState ${connection.readyState}`);
-  }
-
-  return connection;
-};
-
-const connectToDB = async (): Promise<mongoose.Connection> => {
+const connectToDB = async () => {
   console.log('Connect to Mongo');
 
   try {
-    const connection = await getMongoDB();
-    return connection;
+    await mongoose.connect(mongodbIP);
+    console.log('Mongo - connected');
   } catch (error) {
     console.error('Error: ConnectDB', error.message);
-    return error;
   }
 };
 
-export let db: mongoose.Connection;
-connectToDB().then(res => {
-  db = res;
-});
-// db end----
+connectToDB();
 
 app
   .use(logger('tiny'))
