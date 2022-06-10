@@ -1,8 +1,6 @@
 import * as Koa from 'koa';
 import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
-import * as User from '../user';
-import {generateTokens} from '../token';
 import mongoose from 'mongoose';
 
 export const userRouter = new Router();
@@ -40,18 +38,21 @@ userRouter.post('/user/post-data', bodyParser(), async (ctx: Koa.Context) => {
     email,
     password,
   };
+  console.log('post: /user/post-data', item);
 
   try {
     const newUser = new UserData(item); // add new user
 
-    const savedUser = await newUser.save(); // save it inside mongodb
-    console.log('saved user: ', savedUser);
-    ctx.body = JSON.stringify(savedUser);
+    //const savedUser = await newUser.save(); // save it inside mongodb
+    //console.log('saved user: ', savedUser);
+    //ctx.body = JSON.stringify(savedUser);
+    console.log('saved user: ', newUser);
+    ctx.body = JSON.stringify(newUser);
   } catch (err) {
     console.log('err', err);
 
     ctx.status = 500;
-    ctx.body = err.message;
+    ctx.body = err.message || 'error: adding new user';
   }
 });
 
@@ -90,26 +91,4 @@ userRouter.post('/user/delete-data', bodyParser(), async (ctx: Koa.Context) => {
   const id = ctx?.request?.body?.id;
 
   UserData.findOneAndDelete(id).exec();
-});
-
-userRouter.post('/user/auth', bodyParser(), async (ctx: Koa.Context) => {
-  console.log('ctx', ctx.request.body);
-
-  const isAuthorized = await User.isAuthorized(ctx.request.body);
-
-  await new Promise((resolve: any) => {
-    setTimeout(() => resolve(), 2000);
-  }).then(async () => {
-    if (isAuthorized) {
-      const tokens = await generateTokens('user');
-
-      console.log('tokens', tokens);
-
-      ctx.status = 200;
-      ctx.body = tokens;
-    } else {
-      ctx.status = 401;
-      ctx.body = {err: {message: 'error from server (401)'}};
-    }
-  });
 });
