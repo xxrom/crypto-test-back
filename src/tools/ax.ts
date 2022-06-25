@@ -1,5 +1,5 @@
 import axios from "axios";
-import { debounce } from "./t";
+import { debounce, getMillis } from "./t";
 
 export type axProps = {
   url: string;
@@ -7,12 +7,13 @@ export type axProps = {
   timeout?: number;
 };
 
-const memoObj: { [key: string]: any } = {};
-export const REQUEST_TIMEOUT: number = 1050;
+const cashe: { [key: string]: any } = {};
+export const REQUEST_TO_SERVER_TIMEOUT: number = 1.1 * 1000;
+export const CASHE_EXPIRE_TIMEOUT = 60 * 1000;
 
 /**
  * TODO:
- * [ ]: implement request queue with timeout parameter (1sec)
+ * [V]: implement request queue with timeout parameter (1sec)
  */
 const axiosMy: any = axios.create({
   baseURL: "https://api.nomics.com/v1",
@@ -25,12 +26,19 @@ const axiosMy: any = axios.create({
 });
 
 export const ax = async ({ url, method = "get", timeout = -1 }: axProps) => {
+  const currentTime = getMillis();
   const memoPath = `${method}:${url}`;
 
-  if (memoObj[memoPath]) {
-    //console.log("<<< MEMO");
+  if (cashe[memoPath]) {
+    const { res: memoryRes, expiretime } = cashe[memoPath];
 
-    return memoObj[memoPath];
+    if (currentTime < expiretime) {
+      console.log(`<<< MEMO, ${currentTime} / ${expiretime}`);
+
+      return memoryRes;
+    } else {
+      console.log("EXPIRED request!");
+    }
   }
 
   const reqFunction = () =>
@@ -41,8 +49,8 @@ export const ax = async ({ url, method = "get", timeout = -1 }: axProps) => {
   const res =
     timeout <= 0 ? reqFunction() : await debounce(reqFunction, timeout);
 
-  //console.log("<<< save to MEMO");
-  memoObj[memoPath] = res;
+  console.log("<<< save to MEMO");
+  cashe[memoPath] = { res, expiretime: getMillis(CASHE_EXPIRE_TIMEOUT) };
 
-  return memoObj[memoPath];
+  return cashe[memoPath];
 };
