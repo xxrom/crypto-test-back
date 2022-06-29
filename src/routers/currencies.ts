@@ -13,7 +13,7 @@ currenciesRouter.get("/currencies/ticker", async (ctx) => {
     timeout: REQUEST_TO_SERVER_TIMEOUT,
   });
 
-  //console.log('res', res, JSON.stringify(res?.data));
+  //console.log("res", res, JSON.stringify(res?.data));
   ctx.body = JSON.stringify(res?.data);
 });
 
