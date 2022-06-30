@@ -6,7 +6,7 @@ import logger from "koa-morgan";
 import helmet from "koa-helmet";
 import bodyParser from "koa-bodyparser";
 import cors from "@koa/cors";
-import { currenciesRouter, userRouter } from "./routers";
+import { currenciesRouter, userRouter, authRouter } from "./routers";
 import mongoose from "mongoose";
 import { UserData } from "./routers/user";
 
@@ -58,9 +58,11 @@ app
   .use(helmet())
   .use(cors())
   .use(currenciesRouter.routes())
-  .use(userRouter.routes())
   .use(currenciesRouter.allowedMethods())
+  .use(userRouter.routes())
   .use(userRouter.allowedMethods())
+  .use(authRouter.routes())
+  .use(authRouter.allowedMethods())
   .use(bodyParser())
   .use(async (ctx: Koa.Context) => {
     ctx.body = "Hello world";
