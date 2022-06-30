@@ -17,12 +17,12 @@ export const debounce = async (fn: Function, timeout = -1) => {
   lastResponsTime = currentTime;
   const timeDiff = lastResponsTime + queue * timeout - currentTime;
 
-  return await new Promise((res) =>
+  return new Promise((res) =>
     setTimeout(() => {
       queue -= 1;
       console.log("< end queue", queue, getSeconds());
 
-      res("end");
+      res("end queue");
     }, timeDiff)
   ).then(() => fn());
 };

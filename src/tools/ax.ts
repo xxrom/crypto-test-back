@@ -7,7 +7,7 @@ export type axProps = {
   timeout?: number;
 };
 
-const cashe: { [key: string]: any } = {};
+const cashe: { [key: string]: { res: any; expiretime: number } } = {};
 export const REQUEST_TO_SERVER_TIMEOUT: number = 1.1 * 1000;
 export const CASHE_EXPIRE_TIMEOUT = 60 * 1000;
 
@@ -52,5 +52,5 @@ export const ax = async ({ url, method = "get", timeout = -1 }: axProps) => {
   console.log("<<< save to MEMO");
   cashe[memoPath] = { res, expiretime: getMillis(CASHE_EXPIRE_TIMEOUT) };
 
-  return cashe[memoPath];
+  return cashe[memoPath].res;
 };

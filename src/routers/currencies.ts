@@ -13,8 +13,8 @@ currenciesRouter.get("/currencies/ticker", async (ctx) => {
     timeout: REQUEST_TO_SERVER_TIMEOUT,
   });
 
-  //console.log("res", res, JSON.stringify(res?.data));
-  ctx.body = JSON.stringify(res?.data);
+  console.log("res", res?.data?.length);
+  ctx.body = res?.data;
 });
 
 currenciesRouter.get("/currencies/convert/:from/:to", async (ctx) => {
@@ -25,8 +25,8 @@ currenciesRouter.get("/currencies/convert/:from/:to", async (ctx) => {
     timeout: REQUEST_TO_SERVER_TIMEOUT,
   });
 
-  const [fromItem] = res?.data.filter(({ id }: any) => id === from);
-  const [toItem] = res?.data.filter(({ id }: any) => id === to);
+  const [fromItem] = res?.data?.filter(({ id }: any) => id === from);
+  const [toItem] = res?.data?.filter(({ id }: any) => id === to);
 
   //console.log('from', fromItem.id);
   //console.log('to', toItem.id);
