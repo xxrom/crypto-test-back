@@ -36,13 +36,13 @@ authRouter.post("/auth", bodyParser(), async (ctx: Koa.Context) => {
 });
 
 // update token
-authRouter.get("/auth", async (ctx: Koa.Context) => {
+authRouter.get("/auth", bodyParser(), async (ctx: Koa.Context) => {
   console.log("get:/auth", ctx.body);
   ctx.status = 403;
   ctx.body = { err: { message: "error from server (403)" } };
 
-  const { authorization } = ctx.headers;
-  if (!authorization && !authorization.match(/^Bearer\s/)) return;
+  const { authorization } = ctx?.headers;
+  if (!authorization && !authorization?.match(/^Bearer\s/)) return;
 
   //const refresthToken = authorization.replace(/^Bearer\s/, "");
   //const { username } = await Token.getPayload(refresthToken);

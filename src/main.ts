@@ -51,9 +51,7 @@ const connectToDB = async () => {
   }
 };
 
-connectToDB();
-
-app
+const server = app
   .use(logger("tiny"))
   .use(helmet())
   .use(cors())
@@ -67,6 +65,12 @@ app
   .use(async (ctx: Koa.Context) => {
     ctx.body = "Hello world";
   })
-  .listen(port, () => {
+  .listen(port, async () => {
+    if (process.env.ENV !== "TEST") {
+      await connectToDB();
+    }
     console.log(`>>> 🌍 >>> Server running on port >>> ${port}`);
   });
+
+//module.exports = { app };
+export { server };

@@ -1,20 +1,20 @@
-import jwt from 'jsonwebtoken';
-import env from 'dotenv';
+import jwt from "jsonwebtoken";
+import env from "dotenv";
 
 env.config();
 
 const key = process.env.KEY;
 
 export const generateTokens = async (username: string) => {
-  const accessToken = jwt.sign({username}, key, {expiresIn: '10m'}); // 10m
-  const refreshToken = jwt.sign({username}, key, {expiresIn: '30d'});
+  const accessToken = jwt.sign({ username }, key, { expiresIn: "30m" }); // 10m
+  const refreshToken = jwt.sign({ username }, key, { expiresIn: "30d" });
 
   const tokens = {
     accessToken,
     refreshToken,
     //expiresIn: jwt.decode(accessToken),
   };
-  console.log('new tokens', tokens);
+  console.log("new tokens", tokens);
 
   //await redis.setAsync(`${username}_access_token`, accessToken);
   //await redis.setAsync(`${username}_refresh_token`, refreshToken);
@@ -31,7 +31,7 @@ const jwtVerifyAsync = (innerToken: string, innerKey: string) =>
       }
 
       resolve(decode);
-    }),
+    })
   );
 
 export const getPayload = async (token: string) => {
