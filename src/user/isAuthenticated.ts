@@ -2,7 +2,7 @@ import Koa from "koa";
 import { schema } from "./schema";
 //import {redis} from '../redis';
 
-export const isAuthorized = async (req: Koa.Request) => {
+export const isAuthenticated = async (req: Koa.Request) => {
   const { error, value } = schema.validate(req);
 
   console.log("isAuthorized", error, value, req);

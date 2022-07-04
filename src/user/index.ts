@@ -1,2 +1,2 @@
-export { isAuthorized } from "./isAuthorized";
+export { isAuthenticated } from "./isAuthenticated";
 //import {redis} from '../redis';

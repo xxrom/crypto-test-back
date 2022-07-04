@@ -7,7 +7,7 @@
     "start": "yarn build && node ./dist/main.js",
     "build": "node_modules/typescript/bin/tsc",
     "dev": "ENV=DEV nodemon --watch 'src/**/*' -e ts --exec 'ts-node' ./src/main.ts",
-    "test:watch": "ENV=TEST jest --watch --testTimeout=10000",
+    "test:watch": "ENV=TEST PORT=4445 jest --watch --testTimeout=10000 --collectCoverage=false --silent",
     "test": "jest"
   },
   "dependencies": {

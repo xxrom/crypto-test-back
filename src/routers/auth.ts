@@ -8,20 +8,20 @@ import * as User from "../user";
 
 export const authRouter = new Router();
 
-// authorization
-authRouter.post("/auth", bodyParser(), async (ctx: Koa.Context) => {
-  console.log("post:/auth", ctx.body);
+// login / authorization
+authRouter.post("/authenticate", bodyParser(), async (ctx: Koa.Context) => {
+  console.log("post:/authenticate", ctx.body);
 
   await new Promise((resolve: any) => {
     setTimeout(() => resolve(), 1000);
   }).then(async () => {
-    const isAuthorized = await User.isAuthorized(ctx.request.body);
+    const isAuthorized = await User.isAuthenticated(ctx.request.body);
     console.log("isAuth", isAuthorized, ctx.request.body);
 
     if (isAuthorized) {
       //const tokens = await Token.generatePair(ctx.reqest.body.username);
 
-      const tokens = { ttt: "tttt2" };
+      const tokens = { token: "tttt2" };
       console.log("tokens", tokens);
 
       ctx.status = 200;
@@ -36,33 +36,37 @@ authRouter.post("/auth", bodyParser(), async (ctx: Koa.Context) => {
 });
 
 // update token
-authRouter.get("/auth", bodyParser(), async (ctx: Koa.Context) => {
-  console.log("get:/auth", ctx.body);
-  ctx.status = 403;
-  ctx.body = { err: { message: "error from server (403)" } };
+authRouter.post(
+  "/authenticate-update",
+  bodyParser(),
+  async (ctx: Koa.Context) => {
+    console.log("get:/authenticate-update", ctx.body);
+    ctx.status = 403;
+    ctx.body = { err: { message: "error from server (403)" } };
 
-  const { authorization } = ctx?.headers;
-  if (!authorization && !authorization?.match(/^Bearer\s/)) return;
+    const { authorization } = ctx?.headers;
+    if (!authorization && !authorization?.match(/^Bearer\s/)) return;
 
-  //const refresthToken = authorization.replace(/^Bearer\s/, "");
-  //const { username } = await Token.getPayload(refresthToken);
+    //const refresthToken = authorization.replace(/^Bearer\s/, "");
+    //const { username } = await Token.getPayload(refresthToken);
 
-  //const hasValidRefreshToken = await User.hasValidRefreshToken(refresthToken);
+    //const hasValidRefreshToken = await User.hasValidRefreshToken(refresthToken);
 
-  await new Promise((resolve: any) => {
-    setTimeout(() => resolve(), 2000);
-  }).then(async () => {
-    if (
-      1
-      //hasValidRefreshToken
-    ) {
-      //const tokens = await Token.generatePair(username);
-      const tokens = { tt2342: "tadfae3" };
+    await new Promise((resolve: any) => {
+      setTimeout(() => resolve(), 2000);
+    }).then(async () => {
+      if (
+        1
+        //hasValidRefreshToken
+      ) {
+        //const tokens = await Token.generatePair(username);
+        const tokens = { tt2342: "tadfae3" };
 
-      console.log("tokens", tokens);
+        console.log("tokens", tokens);
 
-      ctx.status = 200;
-      ctx.body = tokens;
-    }
-  });
-});
+        ctx.status = 200;
+        ctx.body = tokens;
+      }
+    });
+  }
+);
