@@ -15,6 +15,8 @@ describe("Authenticate-update / Endpoints", () => {
 
 describe("Authenticate / Endpoints", () => {
   it("POST /authenticate get with correct user/password status:200", async () => {
+    // TODO: using test mongoose ???
+    // https://javascript.plainenglish.io/unit-testing-node-js-mongoose-using-jest-106a39b8393d
     const res = await requestWithSupertest
       .post("/authenticate")
       .send({

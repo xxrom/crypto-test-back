@@ -16,6 +16,7 @@ authRouter.post("/authenticate", bodyParser(), async (ctx: Koa.Context) => {
     setTimeout(() => resolve(), 1000);
   }).then(async () => {
     const isAuthorized = await User.isAuthenticated(ctx.request.body);
+
     console.log("isAuth", isAuthorized, ctx.request.body);
 
     if (isAuthorized) {
@@ -41,32 +42,38 @@ authRouter.post(
   bodyParser(),
   async (ctx: Koa.Context) => {
     console.log("get:/authenticate-update", ctx.body);
-    ctx.status = 403;
-    ctx.body = { err: { message: "error from server (403)" } };
 
     const { authorization } = ctx?.headers;
-    if (!authorization && !authorization?.match(/^Bearer\s/)) return;
+
+    if (!authorization && !authorization?.match(/^Bearer\s/)) {
+      ctx.status = 403;
+      ctx.body = { err: { message: "error from server (403)" } };
+
+      return;
+    }
 
     //const refresthToken = authorization.replace(/^Bearer\s/, "");
     //const { username } = await Token.getPayload(refresthToken);
 
     //const hasValidRefreshToken = await User.hasValidRefreshToken(refresthToken);
+    if (0) {
+      // !hasValidRefreshToken
+      ctx.status = 403;
+      ctx.body = { err: { message: "error from server (403)" } };
+
+      return;
+    }
 
     await new Promise((resolve: any) => {
       setTimeout(() => resolve(), 2000);
     }).then(async () => {
-      if (
-        1
-        //hasValidRefreshToken
-      ) {
-        //const tokens = await Token.generatePair(username);
-        const tokens = { tt2342: "tadfae3" };
+      //const tokens = await Token.generatePair(username);
+      const tokens = { tt2342: "tadfae3" };
 
-        console.log("tokens", tokens);
+      console.log("tokens", tokens);
 
-        ctx.status = 200;
-        ctx.body = tokens;
-      }
+      ctx.status = 200;
+      ctx.body = tokens;
     });
   }
 );
