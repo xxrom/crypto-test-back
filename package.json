@@ -4,11 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "yarn build && node ./dist/main.js",
-    "build": "node_modules/typescript/bin/tsc",
-    "dev": "ENV=DEV nodemon --watch 'src/**/*' -e ts --exec 'ts-node' ./src/main.ts",
-    "test:watch": "ENV=TEST PORT=4445 jest --watch --testTimeout=10000 --collectCoverage=false --silent",
-    "test": "jest"
+    "start": "NODE_ENV=PROD yarn build && node ./dist/main.js",
+    "build": "NODE_ENV=PROD node_modules/typescript/bin/tsc",
+    "dev": "NODE_ENV=DEV nodemon --watch 'src/**/*' -e ts --exec 'ts-node' ./src/main.ts",
+    "test:watch": "NODE_ENV=TEST PORT=4445 jest --watch --testTimeout=10000 --collectCoverage=false --silent",
+    "test": "NODE_ENV=TEST jest"
   },
   "dependencies": {
     "@koa/cors": "^3.1.0",

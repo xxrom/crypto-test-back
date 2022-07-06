@@ -9,6 +9,7 @@ describe("generateTokens", () => {
     expect(tokens).toHaveProperty("refreshToken");
   });
 });
+
 describe("jwtVerifyAsync", () => {
   it("create and verify accessToken", async () => {
     const username = "testUserName";

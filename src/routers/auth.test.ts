@@ -1,29 +1,31 @@
 import { server } from "../main";
 import supertest from "supertest";
+import { addMockAdmin, mockAdminUser } from "../tools/mongo";
+import { User } from "../models";
 
-const requestWithSupertest = supertest(server);
+const api = supertest(server);
 
-describe("Authenticate-update / Endpoints", () => {
-  it("POST / should show error status:403", async () => {
-    const res = await requestWithSupertest.post("/authenticate-update");
+describe("auth", () => {
+  beforeEach(async () => {
+    // Dell all users
+    await User.deleteMany({});
+
+    await addMockAdmin();
+  });
+
+  it("/update-authenticate => POST => should show error status:403", async () => {
+    const res = await api.post("/update-authenticate");
 
     expect(res.status).toEqual(403);
     expect(res.type).toEqual(expect.stringContaining("json"));
     expect(res.body).toHaveProperty("err");
   });
-});
 
-describe("Authenticate / Endpoints", () => {
-  it("POST /authenticate get with correct user/password status:200", async () => {
-    // TODO: using test mongoose ???
+  it("/authenticate => POST => get MockAdminUser (user/password) status:200", async () => {
     // https://javascript.plainenglish.io/unit-testing-node-js-mongoose-using-jest-106a39b8393d
-    const res = await requestWithSupertest
-      .post("/authenticate")
-      .send({
-        email: "admin@gmail.com",
-        password: "12341234",
-      })
-      .set("Content-Type", "application/json");
+    // TODO: maybe inmemory mongo for faster tests ????
+
+    const res = await api.post("/authenticate").send(mockAdminUser);
 
     expect(res.status).toEqual(200);
     expect(res.type).toEqual(expect.stringContaining("json"));

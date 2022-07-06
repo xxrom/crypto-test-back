@@ -1,29 +1,14 @@
 import * as Koa from "koa";
 import Router from "koa-router";
 import bodyParser from "koa-bodyparser";
-import mongoose, { HydratedDocument } from "mongoose";
+import { HydratedDocument } from "mongoose";
+import { User, IUser } from "../models";
 
 export const userRouter = new Router();
 
-const { Schema } = mongoose;
-
-export interface IUser {
-  email: string;
-  password: string;
-}
-
-// Schema for user
-const userDataSchema = new Schema<IUser>({
-  email: { type: String, required: true },
-  password: { type: String, required: true },
-});
-
-// Init inside mongoose
-export const UserData = mongoose.model<IUser>("UserData", userDataSchema);
-
 userRouter.get("/user/get-data", async (ctx: Koa.Context) => {
   // find all users
-  await UserData.find().then((res: any) => {
+  await User.find().then((res: any) => {
     console.log("get: /user/get-data => res", res);
 
     ctx.body = JSON.stringify(res);
@@ -45,7 +30,7 @@ userRouter.post("/user/post-data", bodyParser(), async (ctx: Koa.Context) => {
   console.log("post: /user/post-data", item);
 
   try {
-    const newUser: HydratedDocument<IUser> = new UserData(item); // add new user
+    const newUser: HydratedDocument<IUser> = new User(item); // add new user
     const savedUser = await newUser.save(); // save it inside mongodb
 
     console.log("saved user: ", savedUser);
@@ -66,7 +51,7 @@ userRouter.post("/user/update-data", bodyParser(), async (ctx: Koa.Context) => {
   console.log("post: /user/update-data", ctx.request.body);
   const { email, password, id } = ctx.request.body;
 
-  UserData.findById(id, async (err: any, doc: HydratedDocument<IUser>) => {
+  User.findById(id, async (err: any, doc: HydratedDocument<IUser>) => {
     if (err) {
       console.error("error", err);
     }
@@ -89,7 +74,7 @@ userRouter.post("/user/delete-data", bodyParser(), async (ctx: Koa.Context) => {
   console.log("post: /user/delete-data", ctx.request.body);
   const id = ctx?.request?.body?.id;
 
-  UserData.findOneAndDelete(id).exec();
+  User.findOneAndDelete(id).exec();
 
   ctx.body = JSON.stringify(id);
 });
