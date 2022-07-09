@@ -1,9 +1,8 @@
 import Koa from "koa";
 import { userSchema } from "./schema";
-//import { HydratedDocument } from "mongoose";
 import { IUser, User } from ".";
 
-export const isAuthenticated = async (req: Koa.Request) => {
+export const isAuthenticated = async (req: Partial<Koa.Request> & IUser) => {
   console.log("req", req);
 
   const { error, value } = userSchema.validate(req) as {
@@ -29,10 +28,6 @@ export const isAuthenticated = async (req: Koa.Request) => {
     });
 
   console.log("Found User: ", foundUser);
-
-  //const correctPassword = await redis.getAsync(value.username);
-  //const correctEmail = "admin@gmail.com";
-  //const correctPassword = "12341234";
 
   return email === foundUser?.email && password === foundUser?.password;
 };

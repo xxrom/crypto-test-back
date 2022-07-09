@@ -3,6 +3,7 @@ import { IUser, User } from "../models";
 import { EnvType, NODE_ENV } from "./env";
 
 const mongodbCommon = "mongodb://192.168.3.15:27017";
+
 const getMongoUrl = (env: EnvType) => {
   switch (env) {
     case "PROD":
@@ -50,7 +51,7 @@ export const connectToDB = async () => {
   try {
     console.log("Start connecting to Mongo");
 
-    await mongoose.connect(MONGO_URL);
+    await mongoose.connect(MONGO_URL, {});
 
     console.log(`MongoDB - connected: ${MONGO_URL}`);
   } catch (error) {

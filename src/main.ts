@@ -10,8 +10,8 @@ import { NODE_ENV } from "./tools/env";
 
 env.config();
 
-const port = (NODE_ENV !== "TEST" ? process.env.PORT : "4445") || "4444";
 const app: Koa = new Koa();
+const PORT = (NODE_ENV !== "TEST" && process.env.PORT) || "4444";
 
 const server = app
   .use(logger("tiny"))
@@ -24,12 +24,9 @@ const server = app
   .use(userRouter.allowedMethods())
   .use(authRouter.routes())
   .use(authRouter.allowedMethods())
-  .use(async (ctx: Koa.Context) => {
-    ctx.body = "Hello world";
-  })
-  .listen(port, async () => {
+  .listen(PORT, async () => {
     await connectToDB();
-    console.log(`>>> 🌍 >>> Server running on port >>> ${port}`);
+    console.log(`>>> 🌍 >>> Server running on port >>> ${PORT}`);
   });
 
 //module.exports = { app };
