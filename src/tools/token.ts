@@ -1,10 +1,5 @@
 import jwt from "jsonwebtoken";
-import env from "dotenv";
-
-env.config();
-
-export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
-export const JWT_HEADER_KEY = process.env.JWT_HEADER_KEY;
+import { JWT_SECRET_KEY } from "./env";
 
 export type tokenType = {
   accessToken: string;

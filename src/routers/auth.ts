@@ -9,29 +9,28 @@ authRouter.post("/authenticate", async (ctx: Koa.Context) => {
   console.log("post:/authenticate", ctx.request.body);
   const body = ctx?.request?.body;
 
-  await new Promise((resolve: any) => {
-    setTimeout(() => resolve(), 1000);
-  }).then(async () => {
-    const isAuthorized = await User.isAuthenticated(body);
+  /* await new Promise((resolve: any) => {
+    setTimeout(() => resolve(), 500);
+  }).then(async () => { */
+  const isAuthorized = await User.isAuthenticated(body);
 
-    console.log("isAuth", isAuthorized, body);
+  console.log("isAuth", isAuthorized, body);
 
-    if (isAuthorized) {
-      //const tokens = await Token.generatePair(ctx.reqest.body.username);
-      // TODO: Get Real tokens
+  if (isAuthorized) {
+    //const tokens = await Token.generatePair(ctx.reqest.body.username);
+    // TODO: Get Real tokens
 
-      const tokens = { token: "tttt2" };
-      console.log("tokens", tokens);
+    const tokens = { token: "tttt2" };
+    console.log("tokens", tokens);
 
-      ctx.status = 200;
-      ctx.body = tokens;
-    } else {
-      ctx.status = 401;
-      ctx.body = JSON.stringify({
-        err: { message: "error from server (401)" },
-      });
-    }
-  });
+    ctx.status = 200;
+    ctx.body = tokens;
+  } else {
+    ctx.status = 401;
+    ctx.body = JSON.stringify({
+      err: { message: "error from server (401)" },
+    });
+  }
 });
 
 // update token

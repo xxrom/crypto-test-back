@@ -58,3 +58,7 @@ export const connectToDB = async () => {
     console.error("Error: MongoDB: ", error.message);
   }
 };
+
+export const disconnectFromDB = async () => {
+  await mongoose.connection.close();
+};

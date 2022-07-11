@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_KEY_NOMICS } from "./env";
 import { debounce, getMillis } from "./t";
 
 export type axProps = {
@@ -15,19 +16,20 @@ export const CASHE_EXPIRE_TIMEOUT = 60 * 1000;
  * TODO:
  * [V]: implement request queue with timeout parameter (1sec)
  */
-const axiosMy: any = axios.create({
+const axiosMy = axios.create({
   baseURL: "https://api.nomics.com/v1",
   headers: {
     "Content-Type": "application/json",
   },
   params: {
-    key: String(process.env.API_KEY_NOMICS),
+    key: API_KEY_NOMICS,
   },
 });
 
 export const ax = async ({ url, method = "get", timeout = -1 }: axProps) => {
   const currentTime = getMillis();
   const memoPath = `${method}:${url}`;
+  console.log(`memoPath: ${memoPath}`);
 
   if (cashe[memoPath]) {
     const { res: memoryRes, expiretime } = cashe[memoPath];

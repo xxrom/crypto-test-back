@@ -1,16 +1,26 @@
-import { server } from "../main";
-import supertest from "supertest";
-import { addMockAdmin, mockAdminUser } from "../tools/mongo";
+import { core } from "../core";
+import supertest, { SuperAgentTest } from "supertest";
+import { addMockAdmin, connectToDB, mockAdminUser } from "../tools/mongo";
 import { User } from "../models";
+import mongoose from "mongoose";
 
-const api = supertest(server);
+let server: any;
+let api: SuperAgentTest;
 
 describe("auth", () => {
-  beforeEach(async () => {
-    // Dell all users
-    await User.deleteMany({});
+  beforeAll(async () => {
+    server = core.listen();
+    api = supertest.agent(server);
+    await connectToDB();
 
-    await addMockAdmin();
+    // Dell all users
+    //await User.deleteMany({});
+    //await addMockAdmin();
+  });
+
+  afterAll(async () => {
+    await server.close();
+    await mongoose.connection.close();
   });
 
   it("/update-authenticate => POST => should show error status:403", async () => {

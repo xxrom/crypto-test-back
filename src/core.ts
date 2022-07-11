@@ -1,19 +1,13 @@
-import env from "dotenv";
 import Koa from "koa";
 import logger from "koa-morgan";
 import helmet from "koa-helmet";
 import bodyParser from "koa-bodyparser";
 import cors from "@koa/cors";
 import { currenciesRouter, userRouter, authRouter } from "./routers";
-import { connectToDB } from "./tools/mongo";
-import { NODE_ENV } from "./tools/env";
-
-env.config();
 
 const app: Koa = new Koa();
-const PORT = (NODE_ENV !== "TEST" && process.env.PORT) || "4444";
 
-const server = app
+const core = app
   .use(logger("tiny"))
   .use(helmet())
   .use(cors())
@@ -23,11 +17,6 @@ const server = app
   .use(userRouter.routes())
   .use(userRouter.allowedMethods())
   .use(authRouter.routes())
-  .use(authRouter.allowedMethods())
-  .listen(PORT, async () => {
-    await connectToDB();
-    console.log(`>>> 🌍 >>> Server running on port >>> ${PORT}`);
-  });
+  .use(authRouter.allowedMethods());
 
-//module.exports = { app };
-export { server };
+export { core };
