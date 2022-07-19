@@ -7,6 +7,7 @@ export const authRouter = new Router();
 // login / authorization
 authRouter.post("/authenticate", async (ctx: Koa.Context) => {
   console.log("post:/authenticate", ctx.request.body);
+  console.log("cookie", ctx.cookie);
   const body = ctx?.request?.body;
 
   /* await new Promise((resolve: any) => {
