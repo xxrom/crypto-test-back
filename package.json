@@ -7,8 +7,8 @@
     "start": "NODE_ENV=PROD yarn build && node ./dist/index.js",
     "build": "NODE_ENV=PROD node_modules/typescript/bin/tsc",
     "dev": "NODE_ENV=DEV nodemon --watch 'src/**/*' -e ts --exec 'ts-node' ./src/index.ts",
-    "test:watch": "NODE_ENV=TEST jest --watch --testTimeout=8000 --collectCoverage=false",
-    "test": "NODE_ENV=TEST jest --testTimeout=8000"
+    "test:watch": "NODE_ENV=TEST jest --watch --testTimeout=30000 --collectCoverage=false",
+    "test": "NODE_ENV=TEST jest --testTimeout=8000 --detectOpenHandles"
   },
   "dependencies": {
     "@koa/cors": "^3.1.0",

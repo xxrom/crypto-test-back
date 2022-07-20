@@ -1,18 +1,20 @@
-import {
-  addMockAdmin,
-  disconnectFromDB,
-  mockAdminUser,
-} from "../../tools/mongo";
+import mongoose from "mongoose";
+import supertest, { SuperAgentTest } from "supertest";
+import { core } from "../../core";
+import { connectToDB, mockAdminUser } from "../../tools/mongo";
 import { isAuthenticated } from "./isAuthenticated";
-import { User } from "./user";
+
+let server: any;
 
 describe("isAuthenticated", () => {
-  beforeEach(async () => {
-    //await User.deleteMany({});
-    //await addMockAdmin();
+  beforeAll(async () => {
+    server = core.listen();
+    supertest.agent(server);
+    await connectToDB();
   });
-  afterEach(async () => {
-    //await disconnectFromDB();
+  afterAll(async () => {
+    await server.close();
+    await mongoose.connection.close();
   });
 
   it("find user by email and password, should be valid", async () => {
