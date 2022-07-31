@@ -2,7 +2,7 @@ import { generateTokens, jwtVerifyAsync } from "./token";
 
 describe("generateTokens", () => {
   it("create accessToken + refreshToken", async () => {
-    const userInfo = { username: "testUserName" };
+    const userInfo = { email: "testUserName" };
     const tokens = await generateTokens(userInfo);
 
     expect(tokens).toHaveProperty("accessToken");
@@ -12,28 +12,28 @@ describe("generateTokens", () => {
 
 describe("jwtVerifyAsync", () => {
   it("create and verify accessToken", async () => {
-    const username = "testUserName";
-    const tokens = await generateTokens({ username });
+    const email = "testUserName";
+    const tokens = await generateTokens({ email });
 
     expect(tokens).toHaveProperty("accessToken");
 
     const decoded = await jwtVerifyAsync(tokens.accessToken);
     console.info(decoded);
 
-    expect(decoded).toHaveProperty("username");
-    expect(decoded.username).toEqual(username);
+    expect(decoded).toHaveProperty("email");
+    expect(decoded.email).toEqual(email);
   });
 
   it("create/verify + validate trim username", async () => {
-    const username = "  testUserName  ";
-    const tokens = await generateTokens({ username });
+    const email = "  testUserName  ";
+    const tokens = await generateTokens({ email });
 
     expect(tokens).toHaveProperty("accessToken");
 
     const decoded = await jwtVerifyAsync(tokens.accessToken);
     console.info(decoded);
 
-    expect(decoded).toHaveProperty("username");
-    expect(decoded.username).toEqual(username.trim());
+    expect(decoded).toHaveProperty("email");
+    expect(decoded.email).toEqual(email.trim());
   });
 });

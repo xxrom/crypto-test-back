@@ -39,7 +39,7 @@ describe("auth", () => {
 
     expect(res.status).toEqual(200);
     expect(res.type).toEqual(expect.stringContaining("json"));
-    expect(res.body).toHaveProperty("token");
+    expect(res.body).toHaveProperty("accessToken");
     expect(res.body).not.toHaveProperty("err");
   });
 });

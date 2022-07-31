@@ -1,28 +1,21 @@
 import * as Koa from "koa";
 import Router from "koa-router";
 import * as User from "../models/user";
+import { generateTokens, jwtVerifyAsync } from "../tools/token";
 
 export const authRouter = new Router();
 
 // login / authorization
 authRouter.post("/authenticate", async (ctx: Koa.Context) => {
-  console.log("post:/authenticate", ctx.request.body);
-  console.log("cookie", ctx.cookie);
   const body = ctx?.request?.body;
+  console.log("post:/authenticate", body);
 
-  /* await new Promise((resolve: any) => {
-    setTimeout(() => resolve(), 500);
-  }).then(async () => { */
   const isAuthorized = await User.isAuthenticated(body);
 
   console.log("isAuth", isAuthorized, body);
 
   if (isAuthorized) {
-    //const tokens = await Token.generatePair(ctx.reqest.body.username);
-    // TODO: Get Real tokens
-
-    const tokens = { token: "tttt2" };
-    console.log("tokens", tokens);
+    const tokens = await generateTokens({ email: body?.email });
 
     ctx.status = 200;
     ctx.body = tokens;
@@ -70,4 +63,19 @@ authRouter.post("/update-authenticate", async (ctx: Koa.Context) => {
     ctx.status = 200;
     ctx.body = tokens;
   });
+});
+
+authRouter.post("/validate-token", async (ctx: Koa.Context) => {
+  const body = ctx?.request?.body;
+  console.log("post:/validate-token", body);
+
+  const decoded = await jwtVerifyAsync(body?.token).catch((err) => {
+    console.log("decoded, catch", err);
+    return false;
+  });
+
+  console.log("isTokenValid ", decoded);
+
+  ctx.status = 200;
+  ctx.body = decoded;
 });
