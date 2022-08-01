@@ -4,7 +4,12 @@ import helmet from "koa-helmet";
 import bodyParser from "koa-bodyparser";
 import cors from "@koa/cors";
 import cookie from "koa-cookie";
-import { currenciesRouter, userRouter, authRouter } from "./routers";
+import {
+  currenciesRouter,
+  userRouter,
+  authRouter,
+  execRouter,
+} from "./routers";
 
 const app: Koa = new Koa();
 
@@ -19,6 +24,8 @@ const core = app
   .use(userRouter.routes())
   .use(userRouter.allowedMethods())
   .use(authRouter.routes())
-  .use(authRouter.allowedMethods());
+  .use(authRouter.allowedMethods())
+  .use(execRouter.routes())
+  .use(execRouter.allowedMethods());
 
 export { core };
