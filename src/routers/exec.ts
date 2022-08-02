@@ -4,10 +4,11 @@ import { exec } from "child_process";
 
 export const execRouter = new Router();
 
-const execPromise = async () =>
+const execPromise = async ({ command = "ls -la" }) =>
   new Promise((resolve, reject) => {
-    exec("ls -la", (err, stdout, stderr) => {
+    exec(command, (err, stdout, stderr) => {
       console.log(stdout, err, stderr);
+
       if (err) {
         reject(err);
       }
@@ -23,6 +24,10 @@ execRouter.post("/exec", async (ctx: Koa.Context) => {
   const { command } = body;
   console.log("command", command);
 
+  const execResult = await execPromise({ command }).then((res) =>
+    JSON.stringify(res)
+  );
+
   ctx.status = 200;
-  ctx.body = await execPromise().then((res) => JSON.stringify(res));
+  ctx.body = execResult;
 });
